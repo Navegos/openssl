@@ -1,3 +1,10 @@
+openssl (1.1.1-1ubuntu2.1~18.04.5) bionic; urgency=medium
+
+  * Added QUIC, a multiplexed stream transport over UDP, 
+    updated to the last OpenSSL_1_1_1-stable.
+
+ -- Navegos QA <navegos@outlook.com> Sun, 26 Jan 2020 21:15:35 -0500
+
 openssl (1.1.1-1ubuntu2.1~18.04.5) bionic-security; urgency=medium
 
   * debian/patches/OPENSSL_malloc_init_hang.patch: make
