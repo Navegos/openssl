@@ -1,4 +1,4 @@
-openssl (1.1.1-1ubuntu2.1~18.04.5) bionic; urgency=medium
+openssl (1.1.1e-1ubuntu2.1~18.04.5) bionic; urgency=medium
 
   * Added QUIC, a multiplexed stream transport over UDP, 
     updated to the last OpenSSL_1_1_1-stable.

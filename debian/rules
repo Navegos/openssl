@@ -29,7 +29,7 @@ ifneq (,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
 	MAKEFLAGS += -j$(NUMJOBS)
 endif
 
-CONFARGS  = --prefix=/usr --openssldir=/usr/lib/ssl --libdir=lib/$(DEB_HOST_MULTIARCH) zlib enable-zlib enable-tls1_3 enable-rfc3779 enable-cms enable-unit-test
+CONFARGS  = --prefix=/usr --openssldir=/usr/lib/ssl --libdir=lib/$(DEB_HOST_MULTIARCH) zlib enable-afalgeng enable-aria enable-asan enable-asm enable-async enable-autoalginit enable-autoerrinit enable-autoload-config enable-bf enable-blake2 enable-camellia enable-capieng enable-cast enable-chacha enable-cmac enable-cms enable-comp enable-ct enable-des enable-devcryptoeng enable-dgram enable-dh enable-dsa enable-dso enable-dtls enable-dynamic-engine enable-ec enable-ec2m enable-ecdh enable-ecdsa enable-egd enable-engine enable-err enable-filenames enable-fuzz-libfuzzer enable-fuzz-afl enable-gost enable-heartbeats enable-idea enable-makedepend enable-md2 enable-md4 enable-mdc2 enable-msan enable-multiblock enable-nextprotoneg enable-pinshared enable-ocb enable-ocsp enable-pic enable-poly1305 enable-psk enable-quic enable-rc2 enable-rc4 enable-rc5 enable-rdrand enable-rfc3779 enable-rmd160 enable-scrypt enable-sctp enable-seed enable-shared enable-siphash enable-sm2 enable-sm3 enable-sm4 enable-sock enable-srp enable-srtp enable-sse2 enable-ssl enable-ssl-trace enable-static-engine enable-stdio enable-tests enable-threads enable-tls enable-ts enable-ubsan enable-ui-console enable-unit-test enable-whirlpool enable-weak-ssl-ciphers enable-zlib enable-zlib-dynamic enable-ssl3 enable-tls1_3
 OPT_alpha = ev4 ev5
 ARCHOPTS  = OPT_$(DEB_HOST_ARCH)
 OPTS      = $($(ARCHOPTS))
