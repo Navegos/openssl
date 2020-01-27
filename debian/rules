@@ -29,7 +29,7 @@ ifneq (,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
 	MAKEFLAGS += -j$(NUMJOBS)
 endif
 
-CONFARGS  = --prefix=/usr --openssldir=/usr/lib/ssl --libdir=lib/$(DEB_HOST_MULTIARCH) enable-tls1_3 enable-cms enable-asan enable-ecdh enable-ecdsa enable-idea enable-msan enable-quic enable-rfc3779 enable-ubsan enable-unit-test
+CONFARGS  = --prefix=/usr --openssldir=/usr/lib/ssl --libdir=lib/$(DEB_HOST_MULTIARCH) enable-tls1_3 enable-cms enable-ec2m enable-ecdh enable-ecdsa enable-idea enable-md2 enable-quic enable-rc5 enable-rdrand enable-rfc3779 enable-unit-test
 OPT_alpha = ev4 ev5
 ARCHOPTS  = OPT_$(DEB_HOST_ARCH)
 OPTS      = $($(ARCHOPTS))
