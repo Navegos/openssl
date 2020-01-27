@@ -5,7 +5,7 @@ Source: <url://www.openssl.org/>
 Files: *
 Copyright: (c) 1998-2004 The OpenSSL Project
            (c) 1995-1998 Eric A. Young, Tim J. Hudson
-License: dual license
+License: duallicense
    .
    The upstream sources were obtained from https://www.openssl.org/
    .
