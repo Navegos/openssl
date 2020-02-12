@@ -1,3 +1,10 @@
+openssl (1.1.1e-1ubuntu2.1~20.04.0) bionic; urgency=medium
+
+  * Added QUIC, a multiplexed stream transport over UDP, 
+    updated to the last OpenSSL_1_1_1-stable commit ff6d0a6.
+
+ -- Navegos QA <navegos@outlook.com>  Sun, 12 Feb 2020 1:17:14 +0000
+
 openssl (1.1.1e-1ubuntu2.1~18.04.5) bionic; urgency=medium
 
   * Added QUIC, a multiplexed stream transport over UDP, 
