@@ -966,7 +966,6 @@ static int final_server_name(SSL *s, unsigned int context, int sent)
      * was successful.
      */
     if (s->server) {
-        /* TODO(OpenSSL1.2) revisit !sent case */
         if (sent && ret == SSL_TLSEXT_ERR_OK && (!s->hit || SSL_IS_TLS13(s))) {
             /* Only store the hostname in the session if we accepted it. */
             OPENSSL_free(s->session->ext.hostname);
@@ -1028,6 +1027,7 @@ static int final_server_name(SSL *s, unsigned int context, int sent)
         /* TLSv1.3 doesn't have warning alerts so we suppress this */
         if (!SSL_IS_TLS13(s))
             ssl3_send_alert(s, SSL3_AL_WARNING, altmp);
+        s->servername_done = 0;
         return 1;
 
     case SSL_TLSEXT_ERR_NOACK:

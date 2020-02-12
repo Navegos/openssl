@@ -6,8 +6,8 @@ Maintainer: Navegos QA <navegos@outlook.com>
 XSBC-Original-Maintainer: Debian OpenSSL Team <pkg-openssl-devel@lists.alioth.debian.org>
 Uploaders: Christoph Martin <christoph.martin@uni-mainz.de>, Kurt Roeckx <kurt@roeckx.be>, Sebastian Andrzej Siewior <sebastian@breakpoint.cc>
 Standards-Version: 4.2.1
-Vcs-Browser: https://salsa.debian.org/debian/openssl
-Vcs-Git: https://salsa.debian.org/debian/openssl.git
+Vcs-Browser: https://github.com/Navegos/openssl.git
+Vcs-Git: https://github.com/Navegos/openssl.git -b Ubuntu-OpenSSL_1_1_1-stable-qui
 Homepage: https://www.openssl.org/
 Rules-Requires-Root: no
 
