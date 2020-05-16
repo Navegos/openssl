@@ -99,18 +99,15 @@ msgstr ""
 "U zult deze handmatig moeten herstarten via het commando '/etc/init.d/"
 "<dienst> start'."
 
-#~ msgid "${services}"
-#~ msgstr "${services}"
-
 #. Type: boolean
 #. Description
-#: ../debhelper.in/libc.templates:5001
+#: ../libssl1.1.templates:3001
 msgid "Restart services during package upgrades without asking?"
 msgstr "Diensten zonder vragen herstarten bij het opwaarderen van pakketten?"
 
 #. Type: boolean
 #. Description
-#: ../debhelper.in/libc.templates:5001
+#: ../libssl1.1.templates:3001
 msgid ""
 "There are services installed on your system which need to be restarted when "
 "certain libraries, such as libpam, libc, and libssl, are upgraded. Since "
@@ -128,3 +125,6 @@ msgstr ""
 "meer aan u gevraagd. In plaats daarvan worden alle noodzakelijke herstarts "
 "automatisch gedaan zodat u geen vragen krijgt bij elke opwaardering van een "
 "bibliotheek."
+
+#~ msgid "${services}"
+#~ msgstr "${services}"

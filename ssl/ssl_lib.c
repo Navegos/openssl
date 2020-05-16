@@ -1,5 +1,5 @@
 /*
- * Copyright 1995-2019 The OpenSSL Project Authors. All Rights Reserved.
+ * Copyright 1995-2020 The OpenSSL Project Authors. All Rights Reserved.
  * Copyright (c) 2002, Oracle and/or its affiliates. All rights reserved
  * Copyright 2005 Nokia. All rights reserved.
  *
@@ -3982,7 +3982,7 @@ EVP_PKEY *SSL_CTX_get0_privatekey(const SSL_CTX *ctx)
 
 const SSL_CIPHER *SSL_get_current_cipher(const SSL *s)
 {
-    if ((s->session != NULL) && (s->session->cipher != NULL))
+    if (s->session != NULL)
         return s->session->cipher;
     return NULL;
 }

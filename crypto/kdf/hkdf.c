@@ -15,7 +15,7 @@
 #include "internal/cryptlib.h"
 #include "crypto/evp.h"
 
-#define HKDF_MAXBUF 1024
+#define HKDF_MAXBUF 2048
 
 static unsigned char *HKDF(const EVP_MD *evp_md,
                            const unsigned char *salt, size_t salt_len,
@@ -253,6 +253,11 @@ const EVP_PKEY_METHOD hkdf_pkey_meth = {
     pkey_hkdf_ctrl,
     pkey_hkdf_ctrl_str
 };
+
+const EVP_PKEY_METHOD *hkdf_pkey_method(void)
+{
+    return &hkdf_pkey_meth;
+}
 
 static unsigned char *HKDF(const EVP_MD *evp_md,
                            const unsigned char *salt, size_t salt_len,

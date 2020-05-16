@@ -1,5 +1,5 @@
 /*
- * Copyright 1995-2019 The OpenSSL Project Authors. All Rights Reserved.
+ * Copyright 1995-2020 The OpenSSL Project Authors. All Rights Reserved.
  *
  * Licensed under the OpenSSL license (the "License").  You may not use
  * this file except in compliance with the License.  You can obtain a copy
@@ -151,8 +151,6 @@ static void hmac_ctx_cleanup(HMAC_CTX *ctx)
     EVP_MD_CTX_reset(ctx->o_ctx);
     EVP_MD_CTX_reset(ctx->md_ctx);
     ctx->md = NULL;
-    ctx->key_length = 0;
-    OPENSSL_cleanse(ctx->key, sizeof(ctx->key));
 }
 
 void HMAC_CTX_free(HMAC_CTX *ctx)
@@ -203,8 +201,6 @@ int HMAC_CTX_copy(HMAC_CTX *dctx, HMAC_CTX *sctx)
         goto err;
     if (!EVP_MD_CTX_copy_ex(dctx->md_ctx, sctx->md_ctx))
         goto err;
-    memcpy(dctx->key, sctx->key, HMAC_MAX_MD_CBLOCK_SIZE);
-    dctx->key_length = sctx->key_length;
     dctx->md = sctx->md;
     return 1;
  err:

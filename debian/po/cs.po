@@ -95,13 +95,13 @@ msgstr "Budete je muset spustit ručně příkazem „/etc/init.d/<služba> star
 
 #. Type: boolean
 #. Description
-#: ../debhelper.in/libc.templates:5001
+#: ../libssl1.1.templates:3001
 msgid "Restart services during package upgrades without asking?"
 msgstr "Restartovat služby při aktualizaci balíku bez ptaní?"
 
 #. Type: boolean
 #. Description
-#: ../debhelper.in/libc.templates:5001
+#: ../libssl1.1.templates:3001
 msgid ""
 "There are services installed on your system which need to be restarted when "
 "certain libraries, such as libpam, libc, and libssl, are upgraded. Since "

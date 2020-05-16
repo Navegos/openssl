@@ -89,12 +89,9 @@ msgid ""
 msgstr ""
 "Nämä tarvitsee käynnistää käsin ajamalla ”/etc/init.d/<palvelu> start”."
 
-#~ msgid "${services}"
-#~ msgstr "${services}"
-
 #. Type: boolean
 #. Description
-#: ../debhelper.in/libc.templates:5001
+#: ../libssl1.1.templates:3001
 msgid "Restart services during package upgrades without asking?"
 msgstr ""
 "Käynnistetäänkö palvelut kysymättä uudelleen pakettien päivityksen "
@@ -102,7 +99,7 @@ msgstr ""
 
 #. Type: boolean
 #. Description
-#: ../debhelper.in/libc.templates:5001
+#: ../libssl1.1.templates:3001
 msgid ""
 "There are services installed on your system which need to be restarted when "
 "certain libraries, such as libpam, libc, and libssl, are upgraded. Since "
@@ -119,3 +116,6 @@ msgstr ""
 "palveluista. Voit valita tämän vaihtoehdon, jos et halua nähdä kysymystä "
 "jokaisen kirjastopäivityksen yhteydessä. Tällöin tarvittavat palvelut "
 "käynnistetään uudelleen automaattisesti."
+
+#~ msgid "${services}"
+#~ msgstr "${services}"

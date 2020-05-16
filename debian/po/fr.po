@@ -96,12 +96,9 @@ msgstr ""
 "Vous devrez les redémarrer vous-même avec la commande « /etc/init.d/"
 "<service> start »."
 
-#~ msgid "${services}"
-#~ msgstr "${services}"
-
 #. Type: boolean
 #. Description
-#: ../debhelper.in/libc.templates:5001
+#: ../libssl1.1.templates:3001
 msgid "Restart services during package upgrades without asking?"
 msgstr ""
 "Redémarrer inconditionnellement les services lors des mises à niveau de "
@@ -109,7 +106,7 @@ msgstr ""
 
 #. Type: boolean
 #. Description
-#: ../debhelper.in/libc.templates:5001
+#: ../libssl1.1.templates:3001
 msgid ""
 "There are services installed on your system which need to be restarted when "
 "certain libraries, such as libpam, libc, and libssl, are upgraded. Since "
@@ -126,3 +123,6 @@ msgstr ""
 "niveau. Vous pouvez choisir ici que ce choix ne soit plus offert et que les "
 "redémarrages aient lieu systématiquement lors des mises à niveau de "
 "bibliothèques."
+
+#~ msgid "${services}"
+#~ msgstr "${services}"

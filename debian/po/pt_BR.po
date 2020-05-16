@@ -105,13 +105,13 @@ msgstr ""
 
 #. Type: boolean
 #. Description
-#: ../debhelper.in/libc.templates:5001
+#: ../libssl1.1.templates:3001
 msgid "Restart services during package upgrades without asking?"
 msgstr "Reiniciar serviços durante a atualização de pacotes sem perguntar?"
 
 #. Type: boolean
 #. Description
-#: ../debhelper.in/libc.templates:5001
+#: ../libssl1.1.templates:3001
 msgid ""
 "There are services installed on your system which need to be restarted when "
 "certain libraries, such as libpam, libc, and libssl, are upgraded. Since "

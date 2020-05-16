@@ -1,5 +1,5 @@
 #! /usr/bin/env perl
-# Copyright 2014-2019 The OpenSSL Project Authors. All Rights Reserved.
+# Copyright 2014-2020 The OpenSSL Project Authors. All Rights Reserved.
 # Copyright (c) 2014, Intel Corporation. All Rights Reserved.
 # Copyright (c) 2015 CloudFlare, Inc.
 #
@@ -4736,4 +4736,4 @@ ___
 
 $code =~ s/\`([^\`]*)\`/eval $1/gem;
 print $code;
-close STDOUT;
+close STDOUT or die "error closing STDOUT: $!";

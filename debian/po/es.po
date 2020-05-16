@@ -120,12 +120,9 @@ msgstr ""
 "Tendrá que iniciarlos manualmente ejecutando « /etc/init.d/<servicio> start "
 "»."
 
-#~ msgid "${services}"
-#~ msgstr "${services}"
-
 #. Type: boolean
 #. Description
-#: ../debhelper.in/libc.templates:5001
+#: ../libssl1.1.templates:3001
 msgid "Restart services during package upgrades without asking?"
 msgstr ""
 "¿Quiere que los servicios se actualicen durante una actualización de paquete "
@@ -133,7 +130,7 @@ msgstr ""
 
 #. Type: boolean
 #. Description
-#: ../debhelper.in/libc.templates:5001
+#: ../libssl1.1.templates:3001
 msgid ""
 "There are services installed on your system which need to be restarted when "
 "certain libraries, such as libpam, libc, and libssl, are upgraded. Since "
@@ -151,3 +148,6 @@ msgstr ""
 "que se le solicite esta información; en su lugar, cada reinicio de servicio "
 "se hará de forma automática de forma que evitará que se le planteen "
 "preguntas cada vez que se actualice una biblioteca."
+
+#~ msgid "${services}"
+#~ msgstr "${services}"

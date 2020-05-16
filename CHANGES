@@ -7,19 +7,81 @@
  https://github.com/openssl/openssl/commits/ and pick the appropriate
  release branch.
 
- Changes between 1.1.1d and 1.1.1e [xx XXX xxxx]
+ Changes between 1.1.1g and 1.1.1h [xx XXX xxxx]
 
-  *) X509 certificates signed using SHA1 are no longer allowed at security
-     level 1 and above.
-     In TLS/SSL the default security level is 1. It can be set either
-     using the cipher string with @SECLEVEL, or calling
-     SSL_CTX_set_security_level(). If the leaf certificate is signed with SHA-1,
-     a call to SSL_CTX_use_certificate() will fail if the security level is not
-     lowered first.
-     Outside TLS/SSL, the default security level is -1 (effectively 0). It can
-     be set using X509_VERIFY_PARAM_set_auth_level() or using the -auth_level
-     options of the apps.
+  *)
+
+ Changes between 1.1.1f and 1.1.1g [21 Apr 2020]
+
+  *) Fixed segmentation fault in SSL_check_chain()
+     Server or client applications that call the SSL_check_chain() function
+     during or after a TLS 1.3 handshake may crash due to a NULL pointer
+     dereference as a result of incorrect handling of the
+     "signature_algorithms_cert" TLS extension. The crash occurs if an invalid
+     or unrecognised signature algorithm is received from the peer. This could
+     be exploited by a malicious peer in a Denial of Service attack.
+     (CVE-2020-1967)
+     [Benjamin Kaduk]
+
+  *) Added AES consttime code for no-asm configurations
+     an optional constant time support for AES was added
+     when building openssl for no-asm.
+     Enable with: ./config no-asm -DOPENSSL_AES_CONST_TIME
+     Disable with: ./config no-asm -DOPENSSL_NO_AES_CONST_TIME
+     At this time this feature is by default disabled.
+     It will be enabled by default in 3.0.
+     [Bernd Edlinger]
+
+ Changes between 1.1.1e and 1.1.1f [31 Mar 2020]
+
+  *) Revert the change of EOF detection while reading in libssl to avoid
+     regressions in applications depending on the current way of reporting
+     the EOF. As the existing method is not fully accurate the change to
+     reporting the EOF via SSL_ERROR_SSL is kept on the current development
+     branch and will be present in the 3.0 release.
+     [Tomas Mraz]
+
+  *) Revised BN_generate_prime_ex to not avoid factors 3..17863 in p-1
+     when primes for RSA keys are computed.
+     Since we previously always generated primes == 2 (mod 3) for RSA keys,
+     the 2-prime and 3-prime RSA modules were easy to distinguish, since
+     N = p*q = 1 (mod 3), but N = p*q*r = 2 (mod 3). Therefore fingerprinting
+     2-prime vs. 3-prime RSA keys was possible by computing N mod 3.
+     This avoids possible fingerprinting of newly generated RSA modules.
+     [Bernd Edlinger]
+
+ Changes between 1.1.1d and 1.1.1e [17 Mar 2020]
+  *) Properly detect EOF while reading in libssl. Previously if we hit an EOF
+     while reading in libssl then we would report an error back to the
+     application (SSL_ERROR_SYSCALL) but errno would be 0. We now add
+     an error to the stack (which means we instead return SSL_ERROR_SSL) and
+     therefore give a hint as to what went wrong.
+     [Matt Caswell]
+
+  *) Check that ed25519 and ed448 are allowed by the security level. Previously
+     signature algorithms not using an MD were not being checked that they were
+     allowed by the security level.
      [Kurt Roeckx]
+
+  *) Fixed SSL_get_servername() behaviour. The behaviour of SSL_get_servername()
+     was not quite right. The behaviour was not consistent between resumption
+     and normal handshakes, and also not quite consistent with historical
+     behaviour. The behaviour in various scenarios has been clarified and
+     it has been updated to make it match historical behaviour as closely as
+     possible.
+     [Matt Caswell]
+
+  *) [VMS only] The header files that the VMS compilers include automatically,
+     __DECC_INCLUDE_PROLOGUE.H and __DECC_INCLUDE_EPILOGUE.H, use pragmas that
+     the C++ compiler doesn't understand.  This is a shortcoming in the
+     compiler, but can be worked around with __cplusplus guards.
+
+     C++ applications that use OpenSSL libraries must be compiled using the
+     qualifier '/NAMES=(AS_IS,SHORTENED)' to be able to use all the OpenSSL
+     functions.  Otherwise, only functions with symbols of less than 31
+     characters can be used, as the linker will not be able to successfully
+     resolve symbols with longer names.
+     [Richard Levitte]
 
   *) Corrected the documentation of the return values from the EVP_DigestSign*
      set of functions.  The documentation mentioned negative values for some
@@ -50,6 +112,10 @@
      This output format is to replicate the output format found in the '*sum'
      checksum programs. This aims to preserve backward compatibility.
      [Matt Eaton, Richard Levitte, and Paul Dale]
+
+  *) s390x assembly pack: add hardware-support for P-256, P-384, P-521,
+     X25519, X448, Ed25519 and Ed448.
+     [Patrick Steuer]
 
   *) Print all values for a PKCS#12 attribute with 'openssl pkcs12', not just
      the first value.

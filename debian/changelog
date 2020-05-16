@@ -1,76 +1,286 @@
-openssl (1.1.1e-1ubuntu2.1~20.04.0) bionic; urgency=medium
+openssl (1.1.1h-1ubuntu2) focal; urgency=medium
 
   * Added QUIC, a multiplexed stream transport over UDP, 
-    updated to the last OpenSSL_1_1_1-stable commit ff6d0a6.
+    updated to the last OpenSSL_1_1_1-stable commit 6b4b92d.
 
- -- Navegos QA <navegos@outlook.com>  Sun, 12 Feb 2020 1:17:14 +0000
+ -- Navegos QA <navegos@outlook.com>  Sat, 16 May 2020 2:17:14 +0000
 
-openssl (1.1.1e-1ubuntu2.1~18.04.5) bionic; urgency=medium
+openssl (1.1.1f-1ubuntu2) focal; urgency=medium
 
-  * Added QUIC, a multiplexed stream transport over UDP, 
-    updated to the last OpenSSL_1_1_1-stable.
+  * SECURITY UPDATE: Segmentation fault in SSL_check_chain
+    - debian/patches/CVE-2020-1967-1.patch: add test for CVE-2020-1967 in
+      test/recipes/70-test_sslsigalgs.t.
+    - debian/patches/CVE-2020-1967-2.patch: fix NULL dereference in
+      SSL_check_chain() for TLS 1.3 in ssl/t1_lib.c.
+    - debian/patches/CVE-2020-1967-3.patch: fix test in
+      test/recipes/70-test_sslsigalgs.t.
+    - debian/patches/CVE-2020-1967-4.patch: fix test in
+      test/recipes/70-test_sslsigalgs.t.
+    - CVE-2020-1967
 
- -- Navegos QA <navegos@outlook.com>  Sun, 26 Jan 2020 22:34:14 +0000
+ -- Marc Deslauriers <marc.deslauriers@ubuntu.com>  Mon, 20 Apr 2020 07:53:50 -0400
 
-openssl (1.1.1-1ubuntu2.1~18.04.5) bionic-security; urgency=medium
+openssl (1.1.1f-1ubuntu1) focal; urgency=low
 
-  * debian/patches/OPENSSL_malloc_init_hang.patch: make
-    OPENSSL_malloc_init() a no-op to remove a potential infinite loop that
-    can occur in some situations, such as with MySQL 5.7 on s390x.
+  * Merge from Debian unstable.  Remaining changes:
+    - Replace duplicate files in the doc directory with symlinks.
+    - debian/libssl1.1.postinst:
+      + Display a system restart required notification on libssl1.1
+        upgrade on servers.
+      + Use a different priority for libssl1.1/restart-services depending
+        on whether a desktop, or server dist-upgrade is being performed.
+      + Bump version check to to 1.1.1.
+      + Import libraries/restart-without-asking template as used by above.
+    - Revert "Enable system default config to enforce TLS1.2 as a
+      minimum" & "Increase default security level from 1 to 2".
+    - Reword the NEWS entry, as applicable on Ubuntu.
+    - Cherrypick s390x SIMD acceleration patches for poly1305 and chacha20
+      and ECC from master.
+    - Use perl:native in the autopkgtest for installability on i386.
+    - Set OPENSSL_TLS_SECURITY_LEVEL=2 as compiled-in minimum security
+      level. Change meaning of SECURITY_LEVEL=2 to prohibit TLS versions
+      below 1.2 and update documentation. Previous default of 1, can be set
+      by calling SSL_CTX_set_security_level(), SSL_set_security_level() or
+      using ':@SECLEVEL=1' CipherString value in openssl.cfg.
 
- -- Marc Deslauriers <marc.deslauriers@ubuntu.com>  Tue, 12 Nov 2019 11:58:35 -0500
+ -- Dimitri John Ledkov <xnox@ubuntu.com>  Fri, 03 Apr 2020 18:31:00 +0100
 
-openssl (1.1.1-1ubuntu2.1~18.04.4) bionic; urgency=medium
+openssl (1.1.1f-1) unstable; urgency=medium
+
+  * New upstream version
+   - Revert the change of EOF detection to avoid regressions in applications.
+     (Closes: #955442).
+
+ -- Sebastian Andrzej Siewior <sebastian@breakpoint.cc>  Tue, 31 Mar 2020 23:59:59 +0200
+
+openssl (1.1.1e-1) unstable; urgency=medium
+
+  * Use dh-compat level 12.
+  * New upstream version
+    - CVE-2019-1551 (Overflow in the x64_64 Montgomery squaring procedure),
+    (Closes: #947949).
+  * Update symbol list.
+  * Update Standards-Version to 4.5.0. No changes required.
+  * Add musl configurations (Closes: #941765).
+
+ -- Sebastian Andrzej Siewior <sebastian@breakpoint.cc>  Wed, 18 Mar 2020 20:59:39 +0100
+
+openssl (1.1.1d-2ubuntu6) focal; urgency=medium
+
+  * Revert version number change to 1.1.1e-dev.
+
+ -- Dimitri John Ledkov <xnox@ubuntu.com>  Fri, 06 Mar 2020 04:08:51 +0000
+
+openssl (1.1.1d-2ubuntu4) focal; urgency=medium
+
+  * Apply 1_1_1-stable branch patches
+  * Apply s390x ECC assembly pack improvements
+
+ -- Dimitri John Ledkov <xnox@ubuntu.com>  Wed, 26 Feb 2020 21:54:47 +0000
+
+openssl (1.1.1d-2ubuntu3) focal; urgency=medium
+
+  * Use perl:native in the autopkgtest for installability on i386.
+
+ -- Dimitri John Ledkov <xnox@ubuntu.com>  Thu, 16 Jan 2020 14:15:26 +0000
+
+openssl (1.1.1d-2ubuntu2) focal; urgency=low
+
+  * Merge from Debian unstable.  Remaining changes:
+    - Replace duplicate files in the doc directory with symlinks.
+    - debian/libssl1.1.postinst:
+      + Display a system restart required notification on libssl1.1
+        upgrade on servers.
+      + Use a different priority for libssl1.1/restart-services depending
+        on whether a desktop, or server dist-upgrade is being performed.
+      + Bump version check to to 1.1.1.
+      + Import libraries/restart-without-asking template as used by above.
+    - Revert "Enable system default config to enforce TLS1.2 as a
+      minimum" & "Increase default security level from 1 to 2".
+    - Reword the NEWS entry, as applicable on Ubuntu.
+    - Cherrypick s390x SIMD acceleration patches for poly1305 and chacha20
+      from master.
+
+  * Set OPENSSL_TLS_SECURITY_LEVEL=2 as compiled-in minimum security
+    level. Change meaning of SECURITY_LEVEL=2 to prohibit TLS versions
+    below 1.2 and update documentation. Previous default of 1, can be set
+    by calling SSL_CTX_set_security_level(), SSL_set_security_level() or
+    using ':@SECLEVEL=1' CipherString value in openssl.cfg.
+
+ -- Dimitri John Ledkov <xnox@ubuntu.com>  Wed, 08 Jan 2020 17:17:41 +0000
+
+openssl (1.1.1d-2) unstable; urgency=medium
+
+  * Reenable AES-CBC-HMAC-SHA ciphers (Closes: #941987).
+
+ -- Sebastian Andrzej Siewior <sebastian@breakpoint.cc>  Sat, 12 Oct 2019 21:37:55 +0200
+
+openssl (1.1.1d-1) unstable; urgency=medium
+
+  * New upstream version
+   - CVE-2019-1549 (Fixed a fork protection issue).
+   - CVE-2019-1547 (Compute ECC cofactors if not provided during EC_GROUP
+     construction).
+   - CVE-2019-1563 (Fixed a padding oracle in PKCS7_dataDecode and
+     CMS_decrypt_set1_pkey).
+  * Update symbol list
+
+ -- Sebastian Andrzej Siewior <sebastian@breakpoint.cc>  Sat, 14 Sep 2019 00:38:12 +0200
+
+openssl (1.1.1c-1ubuntu4) eoan; urgency=medium
+
+  * Cherrypick s390x SIMD acceleration patches for poly1305 and chacha20
+    from master. LP: #1736705 LP: #1736704
+
+ -- Dimitri John Ledkov <xnox@ubuntu.com>  Tue, 20 Aug 2019 12:46:33 +0100
+
+openssl (1.1.1c-1ubuntu3) eoan; urgency=medium
 
   * Import libraries/restart-without-asking as used in postinst, to
-    prevent failure to configure the package without debconf database.
-    LP: #1832919
+    prevent failure to configure the package without debconf database. LP:
+    #1832919
 
- -- Dimitri John Ledkov <xnox@ubuntu.com>  Thu, 20 Jun 2019 18:36:28 +0100
+ -- Dimitri John Ledkov <xnox@ubuntu.com>  Thu, 20 Jun 2019 17:59:55 +0100
 
-openssl (1.1.1-1ubuntu2.1~18.04.3) bionic; urgency=medium
+openssl (1.1.1c-1ubuntu2) eoan; urgency=medium
 
-  * Fix path to Xorg for reboot notifications on desktop. LP: #1832421
-  * Cherrypick upstream fix to allow succesful init of libssl and
-    libcrypto using separate calls with different options. LP: #1832659
-
- -- Dimitri John Ledkov <xnox@ubuntu.com>  Fri, 14 Jun 2019 13:50:28 +0100
-
-openssl (1.1.1-1ubuntu2.1~18.04.2) bionic; urgency=medium
-
-  * Cherrypick upstream patch to fix ca -spkac output to be text again.
-    LP: #1828215
-  * Cherrypick upstream patch to prevent over long nonces in ChaCha20-Poly1305
-    CVE-2019-1543
   * Bump major version of OpenSSL in postinst to trigger services restart
     upon upgrade. Many services listed there must be restarted when
     upgrading 1.1.0 to 1.1.1. LP: #1832522
+  * Fix path to Xorg for reboot notifications on desktop. LP: #1832421
 
- -- Dimitri John Ledkov <xnox@ubuntu.com>  Wed, 12 Jun 2019 00:12:47 +0100
+ -- Dimitri John Ledkov <xnox@ubuntu.com>  Thu, 13 Jun 2019 15:29:07 +0100
 
-openssl (1.1.1-1ubuntu2.1~18.04.1) bionic; urgency=medium
+openssl (1.1.1c-1ubuntu1) eoan; urgency=low
 
-  * Backport OpenSSL 1.1.1 to 18.04 LTS. LP: #1797386
-  * Adjust Breaks on versions published in bionic-release.
+  * Merge from Debian unstable.  Remaining changes:
+    - Replace duplicate files in the doc directory with symlinks.
+    - debian/libssl1.1.postinst:
+      + Display a system restart required notification on libssl1.1
+        upgrade on servers.
+      + Use a different priority for libssl1.1/restart-services depending
+        on whether a desktop, or server dist-upgrade is being performed.
+    - Revert "Enable system default config to enforce TLS1.2 as a
+      minimum" & "Increase default security level from 1 to 2".
+    - Drop the NEWS entry, not applicable on Ubuntu.
+  * Cherrypick upstream patch to fix ca -spkac output to be text again
+    LP: #1828215
 
- -- Dimitri John Ledkov <xnox@ubuntu.com>  Thu, 13 Dec 2018 14:02:15 +1100
+ -- Dimitri John Ledkov <xnox@ubuntu.com>  Mon, 10 Jun 2019 18:11:35 +0100
 
-openssl (1.1.1-1ubuntu2.1) cosmic-security; urgency=medium
+openssl (1.1.1c-1) unstable; urgency=medium
 
-  * SECURITY UPDATE: timing side channel attack in DSA
-    - debian/patches/CVE-2018-0734-1.patch: fix mod inverse in
-      crypto/dsa/dsa_ossl.c.
-    - debian/patches/CVE-2018-0734-2.patch: fix timing vulnerability in
-      crypto/dsa/dsa_ossl.c.
-    - debian/patches/CVE-2018-0734-3.patch: add a constant time flag in
-      crypto/dsa/dsa_ossl.c.
-    - CVE-2018-0734
-  * SECURITY UPDATE: timing side channel attack in ECDSA
-    - debian/patches/CVE-2018-0735.patch: fix timing vulberability in
-      crypto/ec/ec_mult.c.
-    - CVE-2018-0735
+  * New upstream version
+   - CVE-2019-1543 (Prevent over long nonces in ChaCha20-Poly1305)
+  * Update symbol list
 
- -- Marc Deslauriers <marc.deslauriers@ubuntu.com>  Tue, 04 Dec 2018 08:15:09 -0500
+ -- Sebastian Andrzej Siewior <sebastian@breakpoint.cc>  Thu, 30 May 2019 17:27:48 +0200
+
+openssl (1.1.1b-2ubuntu1) devel; urgency=medium
+
+  * Merge from Debian unstable, remaining changes:
+    - Replace duplicate files in the doc directory with symlinks.
+    - debian/libssl1.1.postinst:
+      + Display a system restart required notification on libssl1.1
+        upgrade on servers.
+      + Use a different priority for libssl1.1/restart-services depending
+        on whether a desktop, or server dist-upgrade is being performed.
+    - Revert "Enable system default config to enforce TLS1.2 as a
+      minimum" & "Increase default security level from 1 to 2".
+    - Drop the NEWS entry, not applicable on Ubuntu.
+
+ -- Dimitri John Ledkov <xnox@ubuntu.com>  Wed, 17 Apr 2019 17:26:42 +0100
+
+openssl (1.1.1b-2) unstable; urgency=medium
+
+  * Fix BUF_MEM regression (Closes: #923516)
+  * Fix error when config can't be opened (Closes: #926315)
+  * Ship an openssl.cnf in libssl1.1-udeb.dirs
+
+ -- Kurt Roeckx <kurt@roeckx.be>  Tue, 16 Apr 2019 21:31:11 +0200
+
+openssl (1.1.1b-1ubuntu2) disco; urgency=medium
+
+  * debian/rules: Ship openssl.cnf in libssl1.1-udeb, as required to use
+    OpenSSL by other udebs, e.g. wget-udeb. LP: #1822898
+
+  * Drop debian/patches/UBUNTU-lower-tls-security-level-for-compat.patch
+    to revert TLS_SECURITY_LEVEL back to 1. LP: #1822984
+
+ -- Dimitri John Ledkov <xnox@ubuntu.com>  Wed, 03 Apr 2019 11:50:23 +0100
+
+openssl (1.1.1b-1ubuntu1) disco; urgency=medium
+
+  * Merge from Debian unstable, remaining changes:
+    - Replace duplicate files in the doc directory with symlinks.
+    - debian/libssl1.1.postinst:
+      + Display a system restart required notification on libssl1.1
+        upgrade on servers.
+      + Use a different priority for libssl1.1/restart-services depending
+        on whether a desktop, or server dist-upgrade is being performed.
+    - Revert "Enable system default config to enforce TLS1.2 as a
+      minimum" & "Increase default security level from 1 to 2".
+    - Further decrease security level from 1 to 0, for compatibility with
+      openssl 1.0.2.
+    - Drop the NEWS entry, not applicable on Ubuntu.
+
+ -- Dimitri John Ledkov <xnox@ubuntu.com>  Wed, 27 Feb 2019 18:13:17 -0500
+
+openssl (1.1.1b-1) unstable; urgency=medium
+
+  [ Sebastian Andrzej Siewior ]
+  * Add Breaks on lighttpd (Closes: #913558).
+
+  [ Kurt Roeckx ]
+  * New upstream version
+  * Update symbol list
+
+ -- Kurt Roeckx <kurt@roeckx.be>  Tue, 26 Feb 2019 19:52:12 +0100
+
+openssl (1.1.1a-1ubuntu2) disco; urgency=medium
+
+  * Drop the NEWS entry, not applicable on Ubuntu.
+
+ -- Dimitri John Ledkov <xnox@ubuntu.com>  Wed, 28 Nov 2018 14:24:28 +0000
+
+openssl (1.1.1a-1ubuntu1) disco; urgency=medium
+
+  * Merge from Debian unstable, remaining changes:
+    - Replace duplicate files in the doc directory with symlinks.
+    - debian/libssl1.1.postinst:
+      + Display a system restart required notification on libssl1.1
+        upgrade on servers.
+      + Use a different priority for libssl1.1/restart-services depending
+        on whether a desktop, or server dist-upgrade is being performed.
+    - Revert "Enable system default config to enforce TLS1.2 as a
+      minimum" & "Increase default security level from 1 to 2".
+    - Further decrease security level from 1 to 0, for compatibility with
+      openssl 1.0.2.
+
+ -- Dimitri John Ledkov <xnox@ubuntu.com>  Wed, 28 Nov 2018 14:06:04 +0000
+
+openssl (1.1.1a-1) unstable; urgency=medium
+
+  * Add Breaks on python-boto (See: #909545)
+  * New upstream version
+   - CVE-2018-0734 (Timing vulnerability in DSA signature generation)
+   - CVE-2018-0735 (Timing vulnerability in ECDSA signature generation)
+   - Update symbol file for 1.1.1a
+
+ -- Sebastian Andrzej Siewior <sebastian@breakpoint.cc>  Thu, 22 Nov 2018 19:40:54 +0100
+
+openssl (1.1.1-2) unstable; urgency=medium
+
+  [ Sebastian Andrzej Siewior ]
+  * Add Breaks on isync (See: #906955)
+  * Fix autopkgtest (Closes: #910459)
+
+  [ Kurt Roeckx ]
+  * Add Breaks on python-imaplib2 (See: #907079)
+  * Add news entry regarding default TLS version and security level
+    (Closes: #875423, #907631, #911389, #912067).
+
+ -- Sebastian Andrzej Siewior <sebastian@breakpoint.cc>  Sun, 28 Oct 2018 23:52:24 +0100
 
 openssl (1.1.1-1ubuntu2) cosmic; urgency=medium
 
@@ -99,7 +309,7 @@ openssl (1.1.1-1) unstable; urgency=medium
   * New upstream version.
    - Update symbol file for 1.1.1
    - CVE-2018-0732 (actually since pre8).
-  * Add Breaks on python-httplib2 (Addresses: #907015)
+  * Add Breaks on python-httplib2 (See: #907278)
   * Add hardening=+all.
   * Update to policy 4.2.1
     - Less verbose testsuite with terse

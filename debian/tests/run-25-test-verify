@@ -5,4 +5,4 @@ cd $(dirname $0)
 export BIN_D=/usr/bin/
 export SRCTOP=../../
 export BLDTOP=./aa
-exec perl -I. 25-test-verify.t
+exec perl -I. 25-test_verify.t

@@ -1,5 +1,5 @@
 /*
- * Copyright 1995-2019 The OpenSSL Project Authors. All Rights Reserved.
+ * Copyright 1995-2020 The OpenSSL Project Authors. All Rights Reserved.
  * Copyright (c) 2002, Oracle and/or its affiliates. All rights reserved
  *
  * Licensed under the OpenSSL license (the "License").  You may not use
@@ -858,9 +858,11 @@ MSG_PROCESS_RETURN tls_process_finished(SSL *s, PACKET *pkt)
                 return MSG_PROCESS_ERROR;
             }
         } else {
+            /* TLS 1.3 gets the secret size from the handshake md */
+            size_t dummy;
             if (!s->method->ssl3_enc->generate_master_secret(s,
                     s->master_secret, s->handshake_secret, 0,
-                    &s->session->master_key_length)) {
+                    &dummy)) {
                 /* SSLfatal() already called */
                 return MSG_PROCESS_ERROR;
             }
