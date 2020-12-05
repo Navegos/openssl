@@ -4432,9 +4432,20 @@ static int test_export_key_mat(int tst)
     SSL_CTX_set_min_proto_version(cctx, protocols[tst]);
 
     if (!TEST_true(create_ssl_objects(sctx, cctx, &serverssl, &clientssl, NULL,
-                                      NULL))
-            || !TEST_true(create_ssl_connection(serverssl, clientssl,
-                                                SSL_ERROR_NONE)))
+                                      NULL)))
+        goto end;
+
+    /*
+     * Premature call of SSL_export_keying_material should just fail.
+     */
+    if (!TEST_int_le(SSL_export_keying_material(clientssl, ckeymat1,
+                                                sizeof(ckeymat1), label,
+                                                SMALL_LABEL_LEN + 1, context,
+                                                sizeof(context) - 1, 1), 0))
+        goto end;
+
+    if (!TEST_true(create_ssl_connection(serverssl, clientssl,
+                                         SSL_ERROR_NONE)))
         goto end;
 
     if (tst == 5) {
@@ -6578,11 +6589,82 @@ static int test_servername(int tst)
     return testresult;
 }
 
+#ifndef OPENSSL_NO_TLS1_2
+static int test_ssl_dup(void)
+{
+    SSL_CTX *cctx = NULL, *sctx = NULL;
+    SSL *clientssl = NULL, *serverssl = NULL, *client2ssl = NULL;
+    int testresult = 0;
+    BIO *rbio = NULL, *wbio = NULL;
+
+    if (!TEST_true(create_ssl_ctx_pair(TLS_server_method(),
+                                       TLS_client_method(),
+                                       0,
+                                       0,
+                                       &sctx, &cctx, cert, privkey)))
+        goto end;
+
+    if (!TEST_true(create_ssl_objects(sctx, cctx, &serverssl, &clientssl,
+                                             NULL, NULL)))
+        goto end;
+
+    if (!TEST_true(SSL_set_min_proto_version(clientssl, TLS1_2_VERSION))
+            || !TEST_true(SSL_set_max_proto_version(clientssl, TLS1_2_VERSION)))
+        goto end;
+
+    client2ssl = SSL_dup(clientssl);
+    rbio = SSL_get_rbio(clientssl);
+    if (!TEST_ptr(rbio)
+            || !TEST_true(BIO_up_ref(rbio)))
+        goto end;
+    SSL_set0_rbio(client2ssl, rbio);
+    rbio = NULL;
+
+    wbio = SSL_get_wbio(clientssl);
+    if (!TEST_ptr(wbio) || !TEST_true(BIO_up_ref(wbio)))
+        goto end;
+    SSL_set0_wbio(client2ssl, wbio);
+    rbio = NULL;
+
+    if (!TEST_ptr(client2ssl)
+               /* Handshake not started so pointers should be different */
+            || !TEST_ptr_ne(clientssl, client2ssl))
+        goto end;
+
+    if (!TEST_int_eq(SSL_get_min_proto_version(client2ssl), TLS1_2_VERSION)
+            || !TEST_int_eq(SSL_get_max_proto_version(client2ssl), TLS1_2_VERSION))
+        goto end;
+
+    if (!TEST_true(create_ssl_connection(serverssl, client2ssl, SSL_ERROR_NONE)))
+        goto end;
+
+    SSL_free(clientssl);
+    clientssl = SSL_dup(client2ssl);
+    if (!TEST_ptr(clientssl)
+               /* Handshake has finished so pointers should be the same */
+            || !TEST_ptr_eq(clientssl, client2ssl))
+        goto end;
+
+    testresult = 1;
+
+ end:
+    SSL_free(serverssl);
+    SSL_free(clientssl);
+    SSL_free(client2ssl);
+    SSL_CTX_free(sctx);
+    SSL_CTX_free(cctx);
+
+    return testresult;
+}
+#endif
+
 #ifndef OPENSSL_NO_QUIC
 
-static int test_quic_set_encryption_secrets(SSL *ssl, OSSL_ENCRYPTION_LEVEL level,
+static int test_quic_set_encryption_secrets(SSL *ssl,
+                                            OSSL_ENCRYPTION_LEVEL level,
                                             const uint8_t *read_secret,
-                                            const uint8_t *write_secret, size_t secret_len)
+                                            const uint8_t *write_secret,
+                                            size_t secret_len)
 {
     test_printf_stderr("quic_set_encryption_secrets() %s, lvl=%d, len=%zd\n",
                        ssl->server ? "server" : "client", level, secret_len);
@@ -6593,11 +6675,12 @@ static int test_quic_add_handshake_data(SSL *ssl, OSSL_ENCRYPTION_LEVEL level,
 {
     SSL *peer = (SSL*)SSL_get_app_data(ssl);
 
-    test_printf_stderr("quic_add_handshake_data() %s, lvl=%d, *data=0x%02X, len=%zd\n",
-                       ssl->server ? "server" : "client", level, (int)*data, len);
+    TEST_info("quic_add_handshake_data() %s, lvl=%d, *data=0x%02X, len=%zd\n",
+              ssl->server ? "server" : "client", level, (int)*data, len);
     if (!TEST_ptr(peer))
         return 0;
 
+    /* We're called with what is locally written; this gives it to the peer */
     if (!TEST_true(SSL_provide_quic_data(peer, level, data, len))) {
         ERR_print_errors_fp(stderr);
         return 0;
@@ -6693,6 +6776,17 @@ static int test_quic_api(void)
     /* Deal with two NewSessionTickets */
     if (!TEST_true(SSL_process_quic_post_handshake(clientssl))
             || !TEST_true(SSL_process_quic_post_handshake(clientssl)))
+        goto end;
+
+    /* Dummy handshake call should succeed */
+    if (!TEST_true(SSL_do_handshake(clientssl)))
+        goto end;
+    /* Test that we (correctly) fail to send KeyUpdate */
+    if (!TEST_true(SSL_key_update(clientssl, SSL_KEY_UPDATE_NOT_REQUESTED))
+            || !TEST_int_le(SSL_do_handshake(clientssl), 0))
+        goto end;
+    if (!TEST_true(SSL_key_update(serverssl, SSL_KEY_UPDATE_NOT_REQUESTED))
+            || !TEST_int_le(SSL_do_handshake(serverssl), 0))
         goto end;
 
     testresult = 1;
@@ -6827,6 +6921,9 @@ int setup_tests(void)
     ADD_ALL_TESTS(test_client_cert_cb, 2);
     ADD_ALL_TESTS(test_ca_names, 3);
     ADD_ALL_TESTS(test_servername, 10);
+#ifndef OPENSSL_NO_TLS1_2
+    ADD_TEST(test_ssl_dup);
+#endif
 #ifndef OPENSSL_NO_QUIC
     ADD_TEST(test_quic_api);
 #endif

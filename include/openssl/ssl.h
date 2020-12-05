@@ -1,5 +1,5 @@
 /*
- * Copyright 1995-2019 The OpenSSL Project Authors. All Rights Reserved.
+ * Copyright 1995-2020 The OpenSSL Project Authors. All Rights Reserved.
  * Copyright (c) 2002, Oracle and/or its affiliates. All rights reserved
  * Copyright 2005 Nokia. All rights reserved.
  *
@@ -2473,9 +2473,9 @@ __owur int SSL_process_quic_post_handshake(SSL *ssl);
 
 __owur int SSL_is_quic(SSL *ssl);
 
-#  endif
-
 int SSL_CIPHER_get_prf_nid(const SSL_CIPHER *c);
+
+#  endif
 
 # ifdef  __cplusplus
 }

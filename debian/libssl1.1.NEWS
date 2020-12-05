@@ -1,4 +1,4 @@
-openssl (1.1.1h-1ubuntu2) focal; urgency=medium
+openssl (1.1.1i-1ubuntu2) focal; urgency=medium
 
   The default security level for TLS connections was increased from
   level 1 to level 2. This moves from the 80 bit security level to the

@@ -17,67 +17,60 @@
 #include "crypto/evp.h"
 #include "internal/numbers.h"
 
-typedef const EVP_PKEY_METHOD *(*pmeth_fn)(void);
 typedef int sk_cmp_fn_type(const char *const *a, const char *const *b);
 
 static STACK_OF(EVP_PKEY_METHOD) *app_pkey_methods = NULL;
 
 /* This array needs to be in order of NIDs */
-static pmeth_fn standard_methods[] = {
+static const EVP_PKEY_METHOD *standard_methods[] = {
 #ifndef OPENSSL_NO_RSA
-    rsa_pkey_method,
+    &rsa_pkey_meth,
 #endif
 #ifndef OPENSSL_NO_DH
-    dh_pkey_method,
+    &dh_pkey_meth,
 #endif
 #ifndef OPENSSL_NO_DSA
-    dsa_pkey_method,
+    &dsa_pkey_meth,
 #endif
 #ifndef OPENSSL_NO_EC
-    ec_pkey_method,
+    &ec_pkey_meth,
 #endif
-    hmac_pkey_method,
+    &hmac_pkey_meth,
 #ifndef OPENSSL_NO_CMAC
-    cmac_pkey_method,
+    &cmac_pkey_meth,
 #endif
 #ifndef OPENSSL_NO_RSA
-    rsa_pss_pkey_method,
+    &rsa_pss_pkey_meth,
 #endif
 #ifndef OPENSSL_NO_DH
-    dhx_pkey_method,
+    &dhx_pkey_meth,
 #endif
 #ifndef OPENSSL_NO_SCRYPT
-    scrypt_pkey_method,
+    &scrypt_pkey_meth,
 #endif
-    tls1_prf_pkey_method,
+    &tls1_prf_pkey_meth,
 #ifndef OPENSSL_NO_EC
-    ecx25519_pkey_method,
-    ecx448_pkey_method,
+    &ecx25519_pkey_meth,
+    &ecx448_pkey_meth,
 #endif
-    hkdf_pkey_method,
+    &hkdf_pkey_meth,
 #ifndef OPENSSL_NO_POLY1305
-    poly1305_pkey_method,
+    &poly1305_pkey_meth,
 #endif
 #ifndef OPENSSL_NO_SIPHASH
-    siphash_pkey_method,
+    &siphash_pkey_meth,
 #endif
 #ifndef OPENSSL_NO_EC
-    ed25519_pkey_method,
-    ed448_pkey_method,
+    &ed25519_pkey_meth,
+    &ed448_pkey_meth,
 #endif
 #ifndef OPENSSL_NO_SM2
-    sm2_pkey_method,
+    &sm2_pkey_meth,
 #endif
 };
 
-DECLARE_OBJ_BSEARCH_CMP_FN(const EVP_PKEY_METHOD *, pmeth_fn, pmeth_func);
-
-static int pmeth_func_cmp(const EVP_PKEY_METHOD *const *a, pmeth_fn const *b)
-{
-    return ((*a)->pkey_id - ((**b)())->pkey_id);
-}
-
-IMPLEMENT_OBJ_BSEARCH_CMP_FN(const EVP_PKEY_METHOD *, pmeth_fn, pmeth_func);
+DECLARE_OBJ_BSEARCH_CMP_FN(const EVP_PKEY_METHOD *, const EVP_PKEY_METHOD *,
+                           pmeth);
 
 static int pmeth_cmp(const EVP_PKEY_METHOD *const *a,
                      const EVP_PKEY_METHOD *const *b)
@@ -85,11 +78,13 @@ static int pmeth_cmp(const EVP_PKEY_METHOD *const *a,
     return ((*a)->pkey_id - (*b)->pkey_id);
 }
 
+IMPLEMENT_OBJ_BSEARCH_CMP_FN(const EVP_PKEY_METHOD *, const EVP_PKEY_METHOD *,
+                             pmeth);
+
 const EVP_PKEY_METHOD *EVP_PKEY_meth_find(int type)
 {
-    pmeth_fn *ret;
     EVP_PKEY_METHOD tmp;
-    const EVP_PKEY_METHOD *t = &tmp;
+    const EVP_PKEY_METHOD *t = &tmp, **ret;
     tmp.pkey_id = type;
     if (app_pkey_methods) {
         int idx;
@@ -97,12 +92,12 @@ const EVP_PKEY_METHOD *EVP_PKEY_meth_find(int type)
         if (idx >= 0)
             return sk_EVP_PKEY_METHOD_value(app_pkey_methods, idx);
     }
-    ret = OBJ_bsearch_pmeth_func(&t, standard_methods,
-                                 sizeof(standard_methods) /
-                                 sizeof(pmeth_fn));
+    ret = OBJ_bsearch_pmeth(&t, standard_methods,
+                            sizeof(standard_methods) /
+                            sizeof(EVP_PKEY_METHOD *));
     if (!ret || !*ret)
         return NULL;
-    return (**ret)();
+    return *ret;
 }
 
 static EVP_PKEY_CTX *int_ctx_new(EVP_PKEY *pkey, ENGINE *e, int id)
@@ -345,7 +340,7 @@ size_t EVP_PKEY_meth_get_count(void)
 const EVP_PKEY_METHOD *EVP_PKEY_meth_get0(size_t idx)
 {
     if (idx < OSSL_NELEM(standard_methods))
-        return (standard_methods[idx])();
+        return standard_methods[idx];
     if (app_pkey_methods == NULL)
         return NULL;
     idx -= OSSL_NELEM(standard_methods);

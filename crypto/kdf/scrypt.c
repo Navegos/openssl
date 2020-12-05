@@ -263,9 +263,4 @@ const EVP_PKEY_METHOD scrypt_pkey_meth = {
     pkey_scrypt_ctrl_str
 };
 
-const EVP_PKEY_METHOD *scrypt_pkey_method(void)
-{
-    return &scrypt_pkey_meth;
-}
-
 #endif

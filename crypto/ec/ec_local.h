@@ -1,5 +1,5 @@
 /*
- * Copyright 2001-2019 The OpenSSL Project Authors. All Rights Reserved.
+ * Copyright 2001-2020 The OpenSSL Project Authors. All Rights Reserved.
  * Copyright (c) 2002, Oracle and/or its affiliates. All rights reserved
  *
  * Licensed under the OpenSSL license (the "License").  You may not use
@@ -179,14 +179,6 @@ struct ec_method_st {
     /* custom ECDH operation */
     int (*ecdh_compute_key)(unsigned char **pout, size_t *poutlen,
                             const EC_POINT *pub_key, const EC_KEY *ecdh);
-    /* custom ECDSA */
-    int (*ecdsa_sign_setup)(EC_KEY *eckey, BN_CTX *ctx, BIGNUM **kinvp,
-                            BIGNUM **rp);
-    ECDSA_SIG *(*ecdsa_sign_sig)(const unsigned char *dgst, int dgstlen,
-                                 const BIGNUM *kinv, const BIGNUM *r,
-                                 EC_KEY *eckey);
-    int (*ecdsa_verify_sig)(const unsigned char *dgst, int dgstlen,
-                            const ECDSA_SIG *sig, EC_KEY *eckey);
     /* Inverse modulo order */
     int (*field_inverse_mod_ord)(const EC_GROUP *, BIGNUM *r,
                                  const BIGNUM *x, BN_CTX *);
@@ -217,6 +209,8 @@ struct ec_group_st {
     BIGNUM *order, *cofactor;
     int curve_name;             /* optional NID for named curve */
     int asn1_flag;              /* flag to control the asn1 encoding */
+    int decoded_from_explicit_params; /* set if decoded from explicit
+                                       * curve parameters encoding */
     point_conversion_form_t asn1_form;
     unsigned char *seed;        /* optional seed for parameters (appears in
                                  * ASN1) */
@@ -595,11 +589,6 @@ int ec_group_simple_order_bits(const EC_GROUP *group);
  */
 const EC_METHOD *EC_GFp_nistz256_method(void);
 #endif
-#ifdef S390X_EC_ASM
-const EC_METHOD *EC_GFp_s390x_nistp256_method(void);
-const EC_METHOD *EC_GFp_s390x_nistp384_method(void);
-const EC_METHOD *EC_GFp_s390x_nistp521_method(void);
-#endif
 
 size_t ec_key_simple_priv2oct(const EC_KEY *eckey,
                               unsigned char *buf, size_t len);
@@ -664,13 +653,6 @@ int ossl_ecdsa_verify(int type, const unsigned char *dgst, int dgst_len,
                       const unsigned char *sigbuf, int sig_len, EC_KEY *eckey);
 int ossl_ecdsa_verify_sig(const unsigned char *dgst, int dgst_len,
                           const ECDSA_SIG *sig, EC_KEY *eckey);
-int ecdsa_simple_sign_setup(EC_KEY *eckey, BN_CTX *ctx_in, BIGNUM **kinvp,
-                            BIGNUM **rp);
-ECDSA_SIG *ecdsa_simple_sign_sig(const unsigned char *dgst, int dgst_len,
-                                 const BIGNUM *in_kinv, const BIGNUM *in_r,
-                                 EC_KEY *eckey);
-int ecdsa_simple_verify_sig(const unsigned char *dgst, int dgst_len,
-                            const ECDSA_SIG *sig, EC_KEY *eckey);
 
 int ED25519_sign(uint8_t *out_sig, const uint8_t *message, size_t message_len,
                  const uint8_t public_key[32], const uint8_t private_key[32]);

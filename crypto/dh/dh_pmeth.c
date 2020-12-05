@@ -512,11 +512,6 @@ const EVP_PKEY_METHOD dh_pkey_meth = {
     pkey_dh_ctrl_str
 };
 
-const EVP_PKEY_METHOD *dh_pkey_method(void)
-{
-    return &dh_pkey_meth;
-}
-
 const EVP_PKEY_METHOD dhx_pkey_meth = {
     EVP_PKEY_DHX,
     0,
@@ -550,8 +545,3 @@ const EVP_PKEY_METHOD dhx_pkey_meth = {
     pkey_dh_ctrl,
     pkey_dh_ctrl_str
 };
-
-const EVP_PKEY_METHOD *dhx_pkey_method(void)
-{
-    return &dhx_pkey_meth;
-}

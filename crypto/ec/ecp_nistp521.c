@@ -128,6 +128,7 @@ static const felem_bytearray nistp521_curve_params[5] = {
 # define NLIMBS 9
 
 typedef uint64_t limb;
+typedef limb limb_aX __attribute((__aligned__(1)));
 typedef limb felem[NLIMBS];
 typedef uint128_t largefelem[NLIMBS];
 
@@ -141,14 +142,14 @@ static const limb bottom58bits = 0x3ffffffffffffff;
 static void bin66_to_felem(felem out, const u8 in[66])
 {
     out[0] = (*((limb *) & in[0])) & bottom58bits;
-    out[1] = (*((limb *) & in[7]) >> 2) & bottom58bits;
-    out[2] = (*((limb *) & in[14]) >> 4) & bottom58bits;
-    out[3] = (*((limb *) & in[21]) >> 6) & bottom58bits;
-    out[4] = (*((limb *) & in[29])) & bottom58bits;
-    out[5] = (*((limb *) & in[36]) >> 2) & bottom58bits;
-    out[6] = (*((limb *) & in[43]) >> 4) & bottom58bits;
-    out[7] = (*((limb *) & in[50]) >> 6) & bottom58bits;
-    out[8] = (*((limb *) & in[58])) & bottom57bits;
+    out[1] = (*((limb_aX *) & in[7]) >> 2) & bottom58bits;
+    out[2] = (*((limb_aX *) & in[14]) >> 4) & bottom58bits;
+    out[3] = (*((limb_aX *) & in[21]) >> 6) & bottom58bits;
+    out[4] = (*((limb_aX *) & in[29])) & bottom58bits;
+    out[5] = (*((limb_aX *) & in[36]) >> 2) & bottom58bits;
+    out[6] = (*((limb_aX *) & in[43]) >> 4) & bottom58bits;
+    out[7] = (*((limb_aX *) & in[50]) >> 6) & bottom58bits;
+    out[8] = (*((limb_aX *) & in[58])) & bottom57bits;
 }
 
 /*
@@ -159,14 +160,14 @@ static void felem_to_bin66(u8 out[66], const felem in)
 {
     memset(out, 0, 66);
     (*((limb *) & out[0])) = in[0];
-    (*((limb *) & out[7])) |= in[1] << 2;
-    (*((limb *) & out[14])) |= in[2] << 4;
-    (*((limb *) & out[21])) |= in[3] << 6;
-    (*((limb *) & out[29])) = in[4];
-    (*((limb *) & out[36])) |= in[5] << 2;
-    (*((limb *) & out[43])) |= in[6] << 4;
-    (*((limb *) & out[50])) |= in[7] << 6;
-    (*((limb *) & out[58])) = in[8];
+    (*((limb_aX *) & out[7])) |= in[1] << 2;
+    (*((limb_aX *) & out[14])) |= in[2] << 4;
+    (*((limb_aX *) & out[21])) |= in[3] << 6;
+    (*((limb_aX *) & out[29])) = in[4];
+    (*((limb_aX *) & out[36])) |= in[5] << 2;
+    (*((limb_aX *) & out[43])) |= in[6] << 4;
+    (*((limb_aX *) & out[50])) |= in[7] << 6;
+    (*((limb_aX *) & out[58])) = in[8];
 }
 
 /* BN_to_felem converts an OpenSSL BIGNUM into an felem */
@@ -1669,9 +1670,6 @@ const EC_METHOD *EC_GFp_nistp521_method(void)
         0, /* keycopy */
         0, /* keyfinish */
         ecdh_simple_compute_key,
-        ecdsa_simple_sign_setup,
-        ecdsa_simple_sign_sig,
-        ecdsa_simple_verify_sig,
         0, /* field_inverse_mod_ord */
         0, /* blind_coordinates */
         0, /* ladder_pre */

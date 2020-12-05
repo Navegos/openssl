@@ -84,20 +84,22 @@ using MD5 for the MAC is also prohibited.
 Security level set to 112 bits of security. As a result RSA, DSA and DH keys
 shorter than 2048 bits and ECC keys shorter than 224 bits are prohibited.
 In addition to the level 1 exclusions any cipher suite using RC4 is also
-prohibited. On Ubuntu, TLS versions below 1.2 are not permitted. Compression is disabled.
+prohibited. SSL version 3 is also not allowed. Compression is disabled.
 
 =item B<Level 3>
 
 Security level set to 128 bits of security. As a result RSA, DSA and DH keys
 shorter than 3072 bits and ECC keys shorter than 256 bits are prohibited.
 In addition to the level 2 exclusions cipher suites not offering forward
-secrecy are prohibited. Session tickets are disabled.
+secrecy are prohibited. TLS versions below 1.1 are not permitted. Session
+tickets are disabled.
 
 =item B<Level 4>
 
 Security level set to 192 bits of security. As a result RSA, DSA and
 DH keys shorter than 7680 bits and ECC keys shorter than 384 bits are
-prohibited.  Cipher suites using SHA1 for the MAC are prohibited.
+prohibited.  Cipher suites using SHA1 for the MAC are prohibited. TLS
+versions below 1.2 are not permitted.
 
 =item B<Level 5>
 
@@ -113,7 +115,7 @@ I<Documentation to be provided.>
 =head1 NOTES
 
 The default security level can be configured when OpenSSL is compiled by
-setting B<-DOPENSSL_TLS_SECURITY_LEVEL=level>. On Ubuntu, 2 is used.
+setting B<-DOPENSSL_TLS_SECURITY_LEVEL=level>. If not set then 1 is used.
 
 The security framework disables or reject parameters inconsistent with the
 set security level. In the past this was difficult as applications had to set
@@ -172,7 +174,7 @@ These functions were added in OpenSSL 1.1.0.
 
 =head1 COPYRIGHT
 
-Copyright 2014-2018 The OpenSSL Project Authors. All Rights Reserved.
+Copyright 2014-2020 The OpenSSL Project Authors. All Rights Reserved.
 
 Licensed under the OpenSSL license (the "License").  You may not use
 this file except in compliance with the License.  You can obtain a copy

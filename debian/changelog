@@ -1,3 +1,10 @@
+openssl (1.1.1i-1ubuntu2) focal; urgency=medium
+
+  * Added QUIC, a multiplexed stream transport over UDP, 
+    updated to the last OpenSSL_1_1_1-stable commit 6ad93e8.
+
+ -- Navegos QA <navegos@outlook.com>  Sat, 4 Dec 2020 12:36:39 +0000
+
 openssl (1.1.1h-1ubuntu2) focal; urgency=medium
 
   * Added QUIC, a multiplexed stream transport over UDP, 

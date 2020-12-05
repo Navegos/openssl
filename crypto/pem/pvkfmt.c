@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2019 The OpenSSL Project Authors. All Rights Reserved.
+ * Copyright 2005-2020 The OpenSSL Project Authors. All Rights Reserved.
  *
  * Licensed under the OpenSSL license (the "License").  You may not use
  * this file except in compliance with the License.  You can obtain a copy
@@ -29,10 +29,10 @@ static unsigned int read_ledword(const unsigned char **in)
 {
     const unsigned char *p = *in;
     unsigned int ret;
-    ret = *p++;
-    ret |= (*p++ << 8);
-    ret |= (*p++ << 16);
-    ret |= (*p++ << 24);
+    ret = (unsigned int)*p++;
+    ret |= (unsigned int)*p++ << 8;
+    ret |= (unsigned int)*p++ << 16;
+    ret |= (unsigned int)*p++ << 24;
     *in = p;
     return ret;
 }

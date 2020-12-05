@@ -107,7 +107,10 @@ static int pkey_hkdf_ctrl(EVP_PKEY_CTX *ctx, int type, int p1, void *p2)
         if (kctx->key != NULL)
             OPENSSL_clear_free(kctx->key, kctx->key_len);
 
-        kctx->key = OPENSSL_memdup(p2, p1);
+        if (p1 == 0)
+            kctx->key = OPENSSL_zalloc(1);
+        else
+            kctx->key = OPENSSL_memdup(p2, p1);
         if (kctx->key == NULL)
             return 0;
 
@@ -253,11 +256,6 @@ const EVP_PKEY_METHOD hkdf_pkey_meth = {
     pkey_hkdf_ctrl,
     pkey_hkdf_ctrl_str
 };
-
-const EVP_PKEY_METHOD *hkdf_pkey_method(void)
-{
-    return &hkdf_pkey_meth;
-}
 
 static unsigned char *HKDF(const EVP_MD *evp_md,
                            const unsigned char *salt, size_t salt_len,
